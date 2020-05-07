@@ -1,0 +1,64 @@
+using System;
+using System.IO;
+using System.Text;
+
+namespace ComsoleApp3
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int counter = 0; // лічильник слів, де d стоїть на 2-му місці
+            string line;     // допоміжний рядок            
+            bool numbers = true;
+            bool empty = true;
+            char[] separator = { ' ', '.', '*', '+', ';', ',', '?', '!', '?', '/' }; // масив
+            StringBuilder otvet = new StringBuilder();  // рядок-відповідь
+            using (StreamReader MyFile = new StreamReader("text.txt"))
+            {
+                // читання рядка з файлу, поки це можливо
+                while ((line = MyFile.ReadLine()) != null)
+                {
+                    empty = false;
+                    Console.WriteLine(line); // друкуємо, що прочитали 
+                                             //виділяємо слова
+                    string[] words = line.Split(separator);
+                    foreach (string slovo in words) //цикл за словами, цикл foreach
+                    {
+                        if ((slovo.Length >= 2) && (slovo[1] == 'd'))
+                        {
+                            counter++;
+                            otvet.Append(slovo);
+                            otvet.Append("  ");
+                        }
+
+                        if (numbers)
+                        {
+                            foreach(char c in slovo)
+                            {
+                                if (!Char.IsDigit(c))
+                                    numbers = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (empty)
+            {
+                Console.WriteLine("File is empty.");
+                return;
+            }
+
+            if (numbers)
+                Console.WriteLine("There are only numbers.");
+
+            if (counter == 0)
+                Console.WriteLine("There are no words where 'd' on second position.");
+
+            Console.WriteLine("There were {0} sequences.", counter);
+            Console.WriteLine(otvet.ToString());
+            Console.ReadLine();
+        }
+    }
+}
